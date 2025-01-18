@@ -97,14 +97,24 @@ class Router{
 
 
     // Handle DELETE Request
-    private function handleDeleteRequest($id){
+    private function handleDeleteRequest($id){    
         if(!$id){
             echo json_encode(["error" => "Task ID is required."]);
-            http_response_code(400);
+            http_response_code(404);
             return;
         }
-        echo json_encode($this->task->deleteTask($id));
-    }
 
+        if($id){
+            // Get Single Task by ID
+            $task = $this->task->getTask($id);
+            if($task){
+                echo json_encode($this->task->deleteTask($id));
+            }else{
+                http_response_code(404);
+                echo json_encode(["error" => "Task not found."]);
+            }
+        
+    }
+    }
 
 }
